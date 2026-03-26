@@ -1,15 +1,21 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.Random;
+import java.util.concurrent.ForkJoinPool;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        int size = 10_000_000;
+        int[] array1 = new Random().ints(size, 0, size).toArray();
+        int[] array2 = array1.clone();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        // Teste Sequencial
+        long start = System.currentTimeMillis();
+        new MergeSortSequencial().sort(array1);
+        System.out.println("Sequencial: " + (System.currentTimeMillis() - start) + "ms");
+
+        // Teste Paralelo
+        ForkJoinPool pool = new ForkJoinPool();
+        start = System.currentTimeMillis();
+        pool.invoke(new MergeSortParalelo(array2));
+        System.out.println("Paralelo: " + (System.currentTimeMillis() - start) + "ms");
     }
 }
